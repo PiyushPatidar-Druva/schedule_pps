@@ -21,6 +21,10 @@ h1 {
     color: #333;
 }
 
+h2 {
+    text-align: center;
+}
+
 form {
     background: #fff;
     padding: 20px;
