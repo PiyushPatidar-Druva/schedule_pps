@@ -44,7 +44,7 @@ form {
     width: 100%;
     max-width: 500px;
     animation: fadeIn 1s ease-in-out;
-    min-height: 672px;
+    min-height: 540px;
 }
 
 label {
