@@ -1,6 +1,12 @@
 body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
 }
 
 .container {
@@ -9,11 +15,16 @@ body {
     display: flex;
     justify-content: center;
     flex-direction: column;
+    width: 100%;
+    max-width: 1200px;
 }
 
 .content-container {
-    display: inline-flex;
+    display: flex;
+    flex-direction: column;
     justify-content: center;
+    align-items: center;
+    gap: 20px;
 }
 
 h1 {
@@ -30,9 +41,10 @@ form {
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 700px;
+    width: 100%;
+    max-width: 500px;
     animation: fadeIn 1s ease-in-out;
-    min-height: 540px;
+    min-height: 672px;
 }
 
 label {
@@ -60,6 +72,7 @@ button {
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    margin-right: 10px;
 }
 
 button:hover {
@@ -76,7 +89,8 @@ button:hover {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     margin-top: 20px;
     animation: fadeIn 1s ease-in-out;
-    width: 718px;
+    width: 100%;
+    max-width: 500px;
     min-height: 558px;
 }
 
@@ -88,7 +102,7 @@ button:hover {
 }
 
 .input-container {
-    margin-right: 20px;
+    margin-right: 0px;
 }
 
 .verification-time {
@@ -104,5 +118,18 @@ button:hover {
     to {
         opacity: 1;
         transform: translateY(0);
+    }
+}
+
+@media (min-width: 768px) {
+    .content-container {
+        flex-direction: row;
+        align-items: flex-start;
+    }
+
+    .input-container,
+    .output-container {
+        flex: 1;
+        margin-right: 20px;
     }
 }
