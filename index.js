@@ -1,11 +1,15 @@
-function toggleVerificationTimes() {
+function toggleVerificationTimes(display) {
   const verificationTimes = document.getElementById("verificationTimes");
-  verificationTimes.style.display =
-    verificationTimes.style.display !== "block" ? "block" : "none";
-
   const convertIstToUtcLabel = document.getElementById("convertIstToUtcLabel");
-  convertIstToUtcLabel.style.display =
-    convertIstToUtcLabel.style.display !== "block" ? "block" : "none";
+  if (display) {
+    verificationTimes.style.display = display;
+    convertIstToUtcLabel.style.display = display;
+  } else {
+    verificationTimes.style.display =
+      verificationTimes.style.display !== "block" ? "block" : "none";
+    convertIstToUtcLabel.style.display =
+      convertIstToUtcLabel.style.display !== "block" ? "block" : "none";
+  }
 }
 
 function convertISTtoUTC(time) {
@@ -29,7 +33,7 @@ document
       "dashboardDataFixture"
     ).value;
     const isConvertIstToUtcFlag =
-      document.getElementById("convertIstToUtc").value;
+      document.getElementById("convertIstToUtc").checked;
 
     const defaultCloudSpecificDetails = {
       "Mainline dep1": {
@@ -83,7 +87,7 @@ document
     const labels = defaultCloudSpecificDetails[cloudType].defaultLabels;
 
     const taskTimesUTC = Object.keys(taskTimes).reduce((acc, time) => {
-      if (isConvertIstToUtcFlag === "true") {
+      if (isConvertIstToUtcFlag) {
         acc[time] = convertISTtoUTC(taskTimes[time]);
       } else {
         acc[time] = taskTimes[time];
@@ -161,6 +165,7 @@ document
 
 document.getElementById("taskForm").addEventListener("reset", function () {
   document.getElementById("output").textContent = "";
+  toggleVerificationTimes("none");
 });
 
 function copyOutput() {
