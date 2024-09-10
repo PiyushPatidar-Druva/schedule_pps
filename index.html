@@ -34,9 +34,14 @@
                     <label for="dashboardDataFixture">DASHBOARD_DATA_GENERATION_FIXTURE Job ID (e.g., 364):</label>
                     <input type="text" id="dashboardDataFixture" name="dashboardDataFixture"><br><br>
 
+
                     <label>
                         <input type="checkbox" id="showVerificationTimes" onclick="toggleVerificationTimes()"> Select
                         Custom Verification Times
+                    </label><br><br>
+
+                    <label id="convertIstToUtcLabel" class="verification-time">
+                        <input type="checkbox" id="convertIstToUtc" value="true" checked> Convert IST to UTC
                     </label><br><br>
 
                     <div id="verificationTimes" class="verification-time">

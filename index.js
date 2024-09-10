@@ -2,6 +2,10 @@ function toggleVerificationTimes() {
   const verificationTimes = document.getElementById("verificationTimes");
   verificationTimes.style.display =
     verificationTimes.style.display !== "block" ? "block" : "none";
+
+  const convertIstToUtcLabel = document.getElementById("convertIstToUtcLabel");
+  convertIstToUtcLabel.style.display =
+    convertIstToUtcLabel.style.display !== "block" ? "block" : "none";
 }
 
 function convertISTtoUTC(time) {
@@ -24,8 +28,10 @@ document
     const dashboardDataFixture = document.getElementById(
       "dashboardDataFixture"
     ).value;
+    const isConvertIstToUtcFlag =
+      document.getElementById("convertIstToUtc").value;
 
-    const defaultTimes = {
+    const defaultCloudSpecificDetails = {
       "Mainline dep1": {
         vmwareTime: "00:00",
         dashboardTime: "02:00",
@@ -34,6 +40,7 @@ document
         nasTime: "06:00",
         oracledtcTime: "07:30",
         mssqlTime: "09:15",
+        defaultLabels: "deployment-1-ap1",
       },
       "Mainline dep0": {
         dellBrandingTime: "15:00",
@@ -43,6 +50,7 @@ document
         nasTime: "17:00",
         oracledtcTime: "18:00",
         mssqlTime: "19:00",
+        defaultLabels: "deployment-0-us0",
       },
       Gov: {
         dellBrandingTime: "19:30",
@@ -52,6 +60,7 @@ document
         nasTime: "21:00",
         oracledtcTime: "22:00",
         mssqlTime: "23:00",
+        defaultLabels: "prod_gov",
       },
     };
 
@@ -66,19 +75,26 @@ document
     ];
     const taskTimes = times.reduce((acc, time) => {
       acc[time] =
-        document.getElementById(time).value || defaultTimes[cloudType][time];
+        document.getElementById(time).value ||
+        defaultCloudSpecificDetails[cloudType][time];
       return acc;
     }, {});
 
+    const labels = defaultCloudSpecificDetails[cloudType].defaultLabels;
+
     const taskTimesUTC = Object.keys(taskTimes).reduce((acc, time) => {
-      acc[time] = convertISTtoUTC(taskTimes[time]);
+      if (isConvertIstToUtcFlag === "true") {
+        acc[time] = convertISTtoUTC(taskTimes[time]);
+      } else {
+        acc[time] = taskTimes[time];
+      }
       return acc;
     }, {});
 
     const deploymentId = cloudType.includes("dep1") ? "1" : "0";
     const cloudTypeFormatted = cloudType.includes("Mainline")
-      ? "Mainline"
-      : "Gov";
+      ? "mainline"
+      : "gov";
     const baseUrl =
       "http://staging-jarvis.druva.org:8080/job/UI-Automation-PPS-Generic-Tasks/";
 
@@ -130,10 +146,10 @@ document
 
     let output = "";
     tasks.forEach((task) => {
-      output += `#PPS ${cloudType} ${task.summaryLabel.toLowerCase()} ${cloudTypeFormatted} at ${
+      output += `#PPS ${cloudType} ${task.summaryLabel.toLowerCase()} at ${
         task.istTime
       }\n`;
-      output += `${task.time} * * 1-5%TASK_TYPE=${task.taskType};CLOUD_TYPE=${cloudTypeFormatted};DEPLOYMENT_ID=${deploymentId};TEST_PLAN_ID=${testPlanId};CP_LABEL=${cpLabel}`;
+      output += `${task.time} * * 1-5%TASK_TYPE=${task.taskType};CLOUD_TYPE=${cloudTypeFormatted};DEPLOYMENT_ID=${deploymentId};TEST_PLAN_ID=${testPlanId};CP_LABEL=${cpLabel},${labels}`;
       if (task.fixture) {
         output += `;DASHBOARD_DATA_GENERATION_FIXTURE=${baseUrl}${task.fixture}/artifact/ui-automation/cypress/dataPreparationDetails.json`;
       }
