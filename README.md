@@ -79,7 +79,29 @@ The form provides default times for different cloud types if no time is specifie
 
 ## Example Output
 
-*(Include example output here, if available)*
+```javascript
+//PPS Mainline dep1 vmware at 03:04
+34 21 * * 1-5%TASK_TYPE=vmwareVerification;CLOUD_TYPE=mainline;DEPLOYMENT_ID=1;TEST_PLAN_ID=PHN-138325;CP_LABEL=CP-235,deployment-1-ap1;TEST_PLAN_SUMMARY_LABEL=VMware
+
+//PPS Mainline dep1 dashboard at 02:00
+30 20 * * 1-5%TASK_TYPE=dashboardVerification;CLOUD_TYPE=mainline;DEPLOYMENT_ID=1;TEST_PLAN_ID=PHN-138325;CP_LABEL=CP-235,deployment-1-ap1;DASHBOARD_DATA_GENERATION_FIXTURE=http://staging-jarvis.druva.org:8080/job/UI-Automation-PPS-Generic-Tasks/370/artifact/ui-automation/cypress/dataPreparationDetails.json;TEST_PLAN_SUMMARY_LABEL=Dashboard
+
+//PPS Mainline dep1 dellbranding at 02:30
+00 21 * * 1-5%TASK_TYPE=dellBrandingVerification;CLOUD_TYPE=mainline;DEPLOYMENT_ID=1;TEST_PLAN_ID=PHN-138325;CP_LABEL=CP-235,deployment-1-ap1;TEST_PLAN_SUMMARY_LABEL=DellBranding
+
+//PPS Mainline dep1 platform at 03:00
+30 21 * * 1-5%TASK_TYPE=platformVerification;CLOUD_TYPE=mainline;DEPLOYMENT_ID=1;TEST_PLAN_ID=PHN-138325;CP_LABEL=CP-235,deployment-1-ap1;TEST_PLAN_SUMMARY_LABEL=Platform
+
+//PPS Mainline dep1 nas at 06:00
+30 00 * * 1-5%TASK_TYPE=nasVerification;CLOUD_TYPE=mainline;DEPLOYMENT_ID=1;TEST_PLAN_ID=PHN-138325;CP_LABEL=CP-235,deployment-1-ap1;TEST_PLAN_SUMMARY_LABEL=NAS
+
+//PPS Mainline dep1 oracledtc at 07:30
+00 02 * * 1-5%TASK_TYPE=oracledtcVerification;CLOUD_TYPE=mainline;DEPLOYMENT_ID=1;TEST_PLAN_ID=PHN-138325;CP_LABEL=CP-235,deployment-1-ap1;TEST_PLAN_SUMMARY_LABEL=OracleDTC
+
+//PPS Mainline dep1 mssql at 09:15
+45 03 * * 1-5%TASK_TYPE=mssqlVerification;CLOUD_TYPE=mainline;DEPLOYMENT_ID=1;TEST_PLAN_ID=PHN-138325;CP_LABEL=CP-235,deployment-1-ap1;TEST_PLAN_SUMMARY_LABEL=MSSQL
+```
+
 
 ## License
 
