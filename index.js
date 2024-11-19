@@ -12,6 +12,15 @@ function toggleVerificationTimes(display) {
   }
 }
 
+document.addEventListener("DOMContentLoaded", function () {
+  // Attach event listener to the "Update" button
+  document
+    .getElementById("showVerificationTimes")
+    .addEventListener("click", function () {
+      toggleVerificationTimes();
+    });
+});
+
 function convertISTtoUTC(time) {
   const [hours, minutes] = time.split(":").map(Number);
   const date = new Date();
@@ -19,6 +28,47 @@ function convertISTtoUTC(time) {
   return `${String(date.getUTCMinutes()).padStart(2, "0")} ${String(
     date.getUTCHours()
   ).padStart(2, "0")}`;
+}
+
+function updateTextAreaValue(fullContent, cloudType, stringToReplace) {
+  // Define the regex pattern for matching content between start and end markers
+  const regexPattern = {
+    "Mainline dep1":
+      /# <----- PPS Mainline DEP1 Starts([\s\S]*?)#PPS Mainline DEP1 Ends  ----->/g,
+    "Mainline dep0":
+      /# <----- PPS Mainline DEP0 Starts([\s\S]*?)#PPS Mainline DEP0 Ends  ----->/g,
+    Gov: /# <----- PPS Gov DEP0 Starts([\s\S]*?)#PPS Gov DEP0 Ends  ----->/g,
+  };
+
+  // Use regex to find and replace the content in the selected section
+  let updatedContent = fullContent;
+
+  // Replace the content based on the selected deployment option
+  updatedContent = updatedContent.replace(
+    regexPattern[cloudType],
+    (match, p1) => {
+      // Replace the content between the start and end markers with the new data
+      return match.replace(p1, stringToReplace);
+    }
+  );
+
+  // Send a message to the content script to replace the textarea value
+  chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    chrome.tabs.sendMessage(
+      tabs[0].id,
+      {
+        action: "replaceTextarea",
+        newValue: updatedContent,
+      },
+      function (response) {
+        if (response.success) {
+          console.log(response.message);
+        } else {
+          console.error(response.message);
+        }
+      }
+    );
+  });
 }
 
 document
@@ -148,23 +198,43 @@ document
       },
     ];
 
-    let output = "";
+    let output = "\n\n";
+    const isUncommentedSchedules = document.getElementById(
+      "unCommentedSchedules"
+    ).checked;
     tasks.forEach((task) => {
-      output += `#PPS ${cloudType} ${task.summaryLabel.toLowerCase()} at ${
-        task.istTime
-      }\n`;
-      output += `${task.time} * * 1-5%TASK_TYPE=${task.taskType};CLOUD_TYPE=${cloudTypeFormatted};DEPLOYMENT_ID=${deploymentId};TEST_PLAN_ID=${testPlanId};CP_LABEL=${cpLabel},${labels}`;
+      output += `#${task.summaryLabel.toLowerCase()} at ${task.istTime}\n`;
+      output +=
+        (isUncommentedSchedules ? "" : "#") +
+        `${task.time} * * 1-5%TASK_TYPE=${task.taskType};CLOUD_TYPE=${cloudTypeFormatted};DEPLOYMENT_ID=${deploymentId};TEST_PLAN_ID=${testPlanId};CP_LABEL=${cpLabel},${labels}`;
       if (task.fixture) {
         output += `;DASHBOARD_DATA_GENERATION_FIXTURE=${baseUrl}${task.fixture}/artifact/ui-automation/cypress/dataPreparationDetails.json`;
       }
       output += `;TEST_PLAN_SUMMARY_LABEL=${task.summaryLabel}\n\n`;
     });
 
-    document.getElementById("output").textContent = output;
+    // Send a message to the content script to get the current value of the textarea
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+      chrome.tabs.sendMessage(
+        tabs[0].id,
+        {
+          action: "getTextareaValue",
+        },
+        function (response) {
+          if (response.success) {
+            let fullContent = response.value;
+            updateTextAreaValue(fullContent, cloudType, output);
+          } else {
+            console.error(response.message);
+            document.getElementById("currentValue").textContent =
+              "Textarea not found";
+          }
+        }
+      );
+    });
   });
 
 document.getElementById("taskForm").addEventListener("reset", function () {
-  document.getElementById("output").textContent = "";
   toggleVerificationTimes("none");
 });
 

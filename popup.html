@@ -18,6 +18,11 @@
             <div class="input-container">
                 <h2>Input</h2>
                 <form id="taskForm">
+
+                    <label>
+                        <input type="checkbox" id="unCommentedSchedules"> Generate Uncommented
+                        Schedules
+                    </label><br><br>
                     <label for="cpLabel">CP_LABEL(e.g. CP-236):</label>
                     <input type="text" id="cpLabel" name="cpLabel" required><br><br>
 
@@ -36,7 +41,7 @@
 
 
                     <label>
-                        <input type="checkbox" id="showVerificationTimes" onclick="toggleVerificationTimes()"> Select
+                        <input type="checkbox" id="showVerificationTimes"> Select
                         Custom Verification Times
                     </label><br><br>
 
@@ -70,10 +75,6 @@
                     <button type="submit">Submit</button>
                     <button type="reset">Reset</button>
                 </form>
-            </div>
-            <div class="output-container">
-                <h2>Formatted Output <span class="copy-icon" onclick="copyOutput()">📋</span></h2>
-                <pre id="output"></pre>
             </div>
         </div>
     </div>
