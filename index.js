@@ -104,12 +104,6 @@ document
 
     const tasks = [
       {
-        taskType: "vmwareVerification",
-        time: taskTimesUTC.vmwareTime,
-        istTime: taskTimes.vmwareTime,
-        summaryLabel: "VMware",
-      },
-      {
         taskType: "dashboardVerification",
         time: taskTimesUTC.dashboardTime,
         istTime: taskTimes.dashboardTime,
@@ -145,6 +139,12 @@ document
         time: taskTimesUTC.mssqlTime,
         istTime: taskTimes.mssqlTime,
         summaryLabel: "MSSQL",
+      },
+      {
+        taskType: "vmwareVerification",
+        time: taskTimesUTC.vmwareTime,
+        istTime: taskTimes.vmwareTime,
+        summaryLabel: "VMware",
       },
     ];
 
