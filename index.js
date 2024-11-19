@@ -57,8 +57,8 @@ document
         defaultLabels: "deployment-0-us0",
       },
       Gov: {
-        dellBrandingTime: "16:50",
-        dashboardTime: "17:00",
+        dashboardTime: "16:50",
+        dellBrandingTime: "17:05",
         platformTime: "17:15",
         nasTime: "18:00",
         oracledtcTime: "19:00",
@@ -69,13 +69,13 @@ document
     };
 
     const times = [
-      "vmwareTime",
       "dashboardTime",
       "dellBrandingTime",
       "platformTime",
       "nasTime",
       "oracledtcTime",
       "mssqlTime",
+      "vmwareTime",
     ];
     const taskTimes = times.reduce((acc, time) => {
       acc[time] =
