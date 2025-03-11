@@ -1,3 +1,91 @@
+function setIsLoading(isLoading) {
+  if (isLoading) {
+    document.getElementById("loader").classList.remove("hidden");
+    document.getElementById("loader").classList.add("show");
+    document.querySelector(".container").classList.add("loader-container");
+  } else {
+    document.getElementById("loader").classList.remove("show");
+    document.getElementById("loader").classList.add("hidden");
+    document.querySelector(".container").classList.remove("loader-container");
+  }
+}
+
+async function getSchedule(jobName = "UI-Automation-PPS-Pipeline") {
+  setIsLoading(true);
+  // Jenkins job URL and API endpoint
+  const jenkinsUrl = `http://staging-jarvis.druva.org:8080/job/${jobName}/config.xml`;
+
+  // Create basic authentication header
+  const auth = btoa(window.env.username + ":" + window.env.apiToken);
+
+  try {
+    // Step 1: Fetch the current Jenkins job configuration (GET request)
+    const response = await fetch(jenkinsUrl, {
+      method: "GET",
+      headers: {
+        Authorization: "Basic " + auth,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error(`Error fetching config: ${response.statusText}`);
+    }
+
+    // Step 2: Get the XML response as text
+    let xmlText = await response.text();
+    const parameterizedSpecification = xmlText.match(
+      /<parameterizedSpecification>([\s\S]*?)<\/parameterizedSpecification>/g
+    );
+    const extractedText = parameterizedSpecification[0]
+      .replace("<parameterizedSpecification>", "")
+      .replace("</parameterizedSpecification>", "");
+
+    setIsLoading(false);
+    return { extractedText, xmlText };
+  } catch (error) {
+    setIsLoading(false);
+  }
+}
+
+async function pushSchedule(
+  jobName = "Test-UI-Automation-PPS-Pipeline",
+  modifiedXml
+) {
+  // Jenkins job URL and API endpoint
+  const jenkinsUrl = `http://staging-jarvis.druva.org:8080/job/${jobName}/config.xml`;
+
+  // Create basic authentication header
+  const auth = btoa(window.env.username + ":" + window.env.apiToken);
+
+  try {
+    // Send the POST request using fetch
+    const response = await fetch(jenkinsUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/xml",
+        Authorization: "Basic " + auth,
+      },
+      body: modifiedXml,
+    });
+    setIsLoading(false);
+  } catch (error) {
+    setIsLoading(false);
+  }
+}
+
+async function updateJenkinsConfig() {
+  const jobName = document.getElementById("jobName").value;
+  const updatedContent = document.getElementById("output").innerHTML;
+  if (updatedContent) {
+    const jobContent = await getSchedule(jobName);
+    const modifiedXml = jobContent.xmlText.replace(
+      /(<parameterizedSpecification>)([\s\S]*?)(<\/parameterizedSpecification>)/,
+      `$1${updatedContent}$3`
+    );
+    await pushSchedule(jobName, modifiedXml);
+  }
+}
+
 function toggleVerificationTimes(display) {
   const verificationTimes = document.getElementById("verificationTimes");
   const convertIstToUtcLabel = document.getElementById("convertIstToUtcLabel");
@@ -21,10 +109,40 @@ function convertISTtoUTC(time) {
   ).padStart(2, "0")}`;
 }
 
+function getUpdatedTextValue(fullContent, cloudType, stringToReplace) {
+  // Define the regex pattern for matching content between start and end markers
+  const regexPattern = {
+    "Mainline dep1":
+      /# &lt;----- PPS Mainline DEP1 Starts([\s\S]*?)#PPS Mainline DEP1 Ends  -----&gt;/g,
+    "Mainline dep0":
+      /# &lt;----- PPS Mainline DEP0 Starts([\s\S]*?)#PPS Mainline DEP0 Ends  -----&gt;/g,
+    Gov: /# &lt;----- PPS Gov DEP0 Starts([\s\S]*?)#PPS Gov DEP0 Ends  -----&gt;/g,
+  };
+
+  // Use regex to find and replace the content in the selected section
+  let updatedContent = fullContent;
+
+  console.log(regexPattern[cloudType]);
+  console.log(updatedContent);
+  // Replace the content based on the selected deployment option
+  updatedContent = updatedContent.replace(
+    regexPattern[cloudType],
+    (match, p1) => {
+      // Replace the content between the start and end markers with the new data
+
+      return match.replace(p1, stringToReplace);
+    }
+  );
+
+  return updatedContent;
+}
+
 document
   .getElementById("taskForm")
-  .addEventListener("submit", function (event) {
+  .addEventListener("submit", async function (event) {
     event.preventDefault();
+
+    setIsLoading(true);
 
     const cpLabel = document.getElementById("cpLabel").value;
     const testPlanId = document.getElementById("testPlanId").value;
@@ -57,13 +175,13 @@ document
         defaultLabels: "deployment-0-us0",
       },
       Gov: {
-        dashboardTime: "16:50",
-        dellBrandingTime: "17:05",
-        platformTime: "17:15",
-        nasTime: "18:00",
-        oracledtcTime: "19:00",
-        mssqlTime: "19:10",
-        vmwareTime: "19:20",
+        dashboardTime: "17:50",
+        dellBrandingTime: "18:05",
+        platformTime: "18:15",
+        nasTime: "19:00",
+        oracledtcTime: "20:00",
+        mssqlTime: "20:10",
+        vmwareTime: "20:20",
         defaultLabels: "prod_gov",
       },
     };
@@ -148,23 +266,46 @@ document
       },
     ];
 
-    let output = "";
+    let output = "\n\n";
+    const isUncommentedSchedules = document.getElementById(
+      "unCommentedSchedules"
+    ).checked;
     tasks.forEach((task) => {
-      output += `#PPS ${cloudType} ${task.summaryLabel.toLowerCase()} at ${
-        task.istTime
-      }\n`;
-      output += `${task.time} * * 1-5%TASK_TYPE=${task.taskType};CLOUD_TYPE=${cloudTypeFormatted};DEPLOYMENT_ID=${deploymentId};TEST_PLAN_ID=${testPlanId};CP_LABEL=${cpLabel},${labels}`;
+      let commentSchedule = !isUncommentedSchedules;
+      if (!document.getElementById(task.taskType).checked) {
+        commentSchedule = true;
+      }
+      output += `#${task.summaryLabel.toLowerCase()} at ${task.istTime}\n`;
+      output +=
+        (!commentSchedule ? "" : "#") +
+        `${task.time} * * 1-5%TASK_TYPE=${task.taskType};CLOUD_TYPE=${cloudTypeFormatted};DEPLOYMENT_ID=${deploymentId};TEST_PLAN_ID=${testPlanId};CP_LABEL=${cpLabel},${labels}`;
       if (task.fixture) {
         output += `;DASHBOARD_DATA_GENERATION_FIXTURE=${baseUrl}${task.fixture}/artifact/ui-automation/cypress/dataPreparationDetails.json`;
       }
       output += `;TEST_PLAN_SUMMARY_LABEL=${task.summaryLabel}\n\n`;
     });
 
-    document.getElementById("output").textContent = output;
+    const jobName = document.getElementById("jobName").value;
+    const jobContent = await getSchedule(jobName);
+
+    const updatedContent = getUpdatedTextValue(
+      jobContent.extractedText,
+      cloudType,
+      output
+    );
+
+    document.getElementById("output").innerHTML = updatedContent;
+
+    // Step 3: Modify the XML (For example, replace a parameter value)
+    // Use a regular expression to replace the <myParameter> value in the XML
+    const modifiedXml = jobContent.xmlText.replace(
+      /(<parameterizedSpecification>)([\s\S]*?)(<\/parameterizedSpecification>)/,
+      `$1${updatedContent}$3`
+    );
+    // await pushSchedule(jobName, modifiedXml);
   });
 
 document.getElementById("taskForm").addEventListener("reset", function () {
-  document.getElementById("output").textContent = "";
   toggleVerificationTimes("none");
 });
 
@@ -178,3 +319,32 @@ function copyOutput() {
   window.getSelection().removeAllRanges();
   alert("Output copied to clipboard!");
 }
+
+document.addEventListener("DOMContentLoaded", async function () {
+  let username = localStorage.getItem("username");
+  let apiToken = localStorage.getItem("apiToken");
+  if (!username && !apiToken) {
+    // Prompt the user for username and password
+    username = prompt("Please enter your username:");
+    password = prompt("Please enter your password:");
+    localStorage.setItem("username", username);
+    localStorage.setItem("apiToken", password);
+  }
+
+  // Store the credentials in the env object
+  window.env = {
+    username,
+    apiToken,
+  };
+
+  const jobName = document.getElementById("jobName").value;
+  const jobContent = await getSchedule(jobName);
+  document.getElementById("output").innerHTML = jobContent.extractedText;
+
+  // Attach event listener to the "Update" button
+  document
+    .getElementById("showVerificationTimes")
+    .addEventListener("click", function () {
+      toggleVerificationTimes();
+    });
+});

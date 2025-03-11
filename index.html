@@ -12,12 +12,56 @@
 </head>
 
 <body>
+    <div id="loader" class="loader hidden"></div>
     <div class="container">
         <h1>PPS Pipeline Scheduler</h1>
         <div class="content-container">
             <div class="input-container">
                 <h2>Input</h2>
                 <form id="taskForm">
+
+                    <label>
+                        <input type="checkbox" id="unCommentedSchedules"> Generate Uncommented
+                        Schedules
+                    </label><br><br>
+
+                    <label>
+                        <input type="checkbox" class="verification" id="vmwareVerification" checked> VMware Verification
+                    </label><br><br>
+
+                    <label>
+                        <input type="checkbox" class="verification" id="dashboardVerification" checked> Dashboard
+                        Verification
+                    </label><br><br>
+
+                    <label>
+                        <input type="checkbox" class="verification" id="dellBrandingVerification" checked> Dell Branding
+                        Verification
+                    </label><br><br>
+
+                    <label>
+                        <input type="checkbox" class="verification" id="platformVerification" checked> Platform
+                        Verification
+                    </label><br><br>
+
+                    <label>
+                        <input type="checkbox" class="verification" id="nasVerification" checked> NAS Verification
+                    </label><br><br>
+
+                    <label>
+                        <input type="checkbox" class="verification" id="oracledtcVerification"> Oracle
+                        Verification
+                    </label><br><br>
+
+                    <label>
+                        <input type="checkbox" class="verification" id="mssqlVerification" checked> MSSQL Verification
+                    </label><br><br>
+
+
+                    <label for="jobName">Job Name(e.g. Test-UI-Automation-PPS-Pipeline):</label>
+                    <input type="text" id="jobName" name="jobName" value="Test-UI-Automation-PPS-Pipeline"
+                        required><br><br>
+
                     <label for="cpLabel">CP_LABEL(e.g. CP-236):</label>
                     <input type="text" id="cpLabel" name="cpLabel" required><br><br>
 
@@ -36,7 +80,7 @@
 
 
                     <label>
-                        <input type="checkbox" id="showVerificationTimes" onclick="toggleVerificationTimes()"> Select
+                        <input type="checkbox" id="showVerificationTimes"> Select
                         Custom Verification Times
                     </label><br><br>
 
@@ -72,7 +116,9 @@
                 </form>
             </div>
             <div class="output-container">
-                <h2>Formatted Output <span class="copy-icon" onclick="copyOutput()">📋</span></h2>
+                <h2>Formatted Output <span class="copy-icon" onclick="copyOutput()">📋</span>
+                    <button type="button" onclick="updateJenkinsConfig()">Change Config</button>
+                </h2>
                 <pre id="output"></pre>
             </div>
         </div>

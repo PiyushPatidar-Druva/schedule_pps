@@ -1,0 +1,80 @@
+# <----- PPS Mainline DEP1 Starts
+
+#dashboard at 02:00
+#30 20 * * 1-5%TASK_TYPE=dashboardVerification;CLOUD_TYPE=mainline;DEPLOYMENT_ID=1;TEST_PLAN_ID=PHN-150612;CP_LABEL=CP-245,deployment-1-ap1;DASHBOARD_DATA_GENERATION_FIXTURE=http://staging-jarvis.druva.org:8080/job/UI-Automation-PPS-Generic-Tasks/442/artifact/ui-automation/cypress/dataPreparationDetails.json;TEST_PLAN_SUMMARY_LABEL=Dashboard
+
+#dellbranding at 02:15
+#45 20 * * 1-5%TASK_TYPE=dellBrandingVerification;CLOUD_TYPE=mainline;DEPLOYMENT_ID=1;TEST_PLAN_ID=PHN-150612;CP_LABEL=CP-245,deployment-1-ap1;TEST_PLAN_SUMMARY_LABEL=DellBranding
+
+#platform at 02:20
+#50 20 * * 1-5%TASK_TYPE=platformVerification;CLOUD_TYPE=mainline;DEPLOYMENT_ID=1;TEST_PLAN_ID=PHN-150612;CP_LABEL=CP-245,deployment-1-ap1;TEST_PLAN_SUMMARY_LABEL=Platform
+
+#nas at 03:00
+#30 21 * * 1-5%TASK_TYPE=nasVerification;CLOUD_TYPE=mainline;DEPLOYMENT_ID=1;TEST_PLAN_ID=PHN-150612;CP_LABEL=CP-245,deployment-1-ap1;TEST_PLAN_SUMMARY_LABEL=NAS
+
+#oracledtc at 04:00
+#30 22 * * 1-5%TASK_TYPE=oracledtcVerification;CLOUD_TYPE=mainline;DEPLOYMENT_ID=1;TEST_PLAN_ID=PHN-150612;CP_LABEL=CP-245,deployment-1-ap1;TEST_PLAN_SUMMARY_LABEL=OracleDTC
+
+#mssql at 04:15
+#45 22 * * 1-5%TASK_TYPE=mssqlVerification;CLOUD_TYPE=mainline;DEPLOYMENT_ID=1;TEST_PLAN_ID=PHN-150612;CP_LABEL=CP-245,deployment-1-ap1;TEST_PLAN_SUMMARY_LABEL=MSSQL
+
+#vmware at 04:30
+#00 23 * * 1-5%TASK_TYPE=vmwareVerification;CLOUD_TYPE=mainline;DEPLOYMENT_ID=1;TEST_PLAN_ID=PHN-150612;CP_LABEL=CP-245,deployment-1-ap1;TEST_PLAN_SUMMARY_LABEL=VMware
+
+#PPS Mainline DEP1 Ends  ----->
+
+
+
+# <----- PPS Mainline DEP0 Starts
+
+#dashboard at 14:30
+#00 09 * * 1-5%TASK_TYPE=dashboardVerification;CLOUD_TYPE=mainline;DEPLOYMENT_ID=0;TEST_PLAN_ID=PHN-150613;CP_LABEL=CP-245,deployment-0-us0;DASHBOARD_DATA_GENERATION_FIXTURE=http://staging-jarvis.druva.org:8080/job/UI-Automation-PPS-Generic-Tasks/453/artifact/ui-automation/cypress/dataPreparationDetails.json;TEST_PLAN_SUMMARY_LABEL=Dashboard
+
+#dellbranding at 14:45
+#15 09 * * 1-5%TASK_TYPE=dellBrandingVerification;CLOUD_TYPE=mainline;DEPLOYMENT_ID=0;TEST_PLAN_ID=PHN-150613;CP_LABEL=CP-245,deployment-0-us0;TEST_PLAN_SUMMARY_LABEL=DellBranding
+
+#platform at 14:55
+#25 09 * * 1-5%TASK_TYPE=platformVerification;CLOUD_TYPE=mainline;DEPLOYMENT_ID=0;TEST_PLAN_ID=PHN-150613;CP_LABEL=CP-245,deployment-0-us0;TEST_PLAN_SUMMARY_LABEL=Platform
+
+#nas at 15:30
+#00 10 * * 1-5%TASK_TYPE=nasVerification;CLOUD_TYPE=mainline;DEPLOYMENT_ID=0;TEST_PLAN_ID=PHN-150613;CP_LABEL=CP-245,deployment-0-us0;TEST_PLAN_SUMMARY_LABEL=NAS
+
+#oracledtc at 16:30
+#00 11 * * 1-5%TASK_TYPE=oracledtcVerification;CLOUD_TYPE=mainline;DEPLOYMENT_ID=0;TEST_PLAN_ID=PHN-150613;CP_LABEL=CP-245,deployment-0-us0;TEST_PLAN_SUMMARY_LABEL=OracleDTC
+
+#mssql at 16:40
+#10 11 * * 1-5%TASK_TYPE=mssqlVerification;CLOUD_TYPE=mainline;DEPLOYMENT_ID=0;TEST_PLAN_ID=PHN-150613;CP_LABEL=CP-245,deployment-0-us0;TEST_PLAN_SUMMARY_LABEL=MSSQL
+
+#vmware at 16:50
+#20 11 * * 1-5%TASK_TYPE=vmwareVerification;CLOUD_TYPE=mainline;DEPLOYMENT_ID=0;TEST_PLAN_ID=PHN-150613;CP_LABEL=CP-245,deployment-0-us0;TEST_PLAN_SUMMARY_LABEL=VMware
+
+#PPS Mainline DEP0 Ends  ----->
+
+
+
+# <----- PPS Gov DEP0 Starts
+
+#dashboard at 17:50
+#20 12 * * 1-5%TASK_TYPE=dashboardVerification;CLOUD_TYPE=gov;DEPLOYMENT_ID=0;TEST_PLAN_ID=PHN-150613;CP_LABEL=CP-245,prod_gov;DASHBOARD_DATA_GENERATION_FIXTURE=http://staging-jarvis.druva.org:8080/job/UI-Automation-PPS-Generic-Tasks/454/artifact/ui-automation/cypress/dataPreparationDetails.json;TEST_PLAN_SUMMARY_LABEL=Dashboard
+
+#dellbranding at 18:05
+#35 12 * * 1-5%TASK_TYPE=dellBrandingVerification;CLOUD_TYPE=gov;DEPLOYMENT_ID=0;TEST_PLAN_ID=PHN-150613;CP_LABEL=CP-245,prod_gov;TEST_PLAN_SUMMARY_LABEL=DellBranding
+
+#platform at 18:15
+#45 12 * * 1-5%TASK_TYPE=platformVerification;CLOUD_TYPE=gov;DEPLOYMENT_ID=0;TEST_PLAN_ID=PHN-150613;CP_LABEL=CP-245,prod_gov;TEST_PLAN_SUMMARY_LABEL=Platform
+
+#nas at 19:00
+#30 13 * * 1-5%TASK_TYPE=nasVerification;CLOUD_TYPE=gov;DEPLOYMENT_ID=0;TEST_PLAN_ID=PHN-150613;CP_LABEL=CP-245,prod_gov;TEST_PLAN_SUMMARY_LABEL=NAS
+
+#oracledtc at 20:00
+#30 14 * * 1-5%TASK_TYPE=oracledtcVerification;CLOUD_TYPE=gov;DEPLOYMENT_ID=0;TEST_PLAN_ID=PHN-150613;CP_LABEL=CP-245,prod_gov;TEST_PLAN_SUMMARY_LABEL=OracleDTC
+
+#mssql at 20:10
+#40 14 * * 1-5%TASK_TYPE=mssqlVerification;CLOUD_TYPE=gov;DEPLOYMENT_ID=0;TEST_PLAN_ID=PHN-150613;CP_LABEL=CP-245,prod_gov;TEST_PLAN_SUMMARY_LABEL=MSSQL
+
+#vmware at 20:20
+#50 14 * * 1-5%TASK_TYPE=vmwareVerification;CLOUD_TYPE=gov;DEPLOYMENT_ID=0;TEST_PLAN_ID=PHN-150613;CP_LABEL=CP-245,prod_gov;TEST_PLAN_SUMMARY_LABEL=VMware
+
+#PPS Gov DEP0 Ends  ----->
+
+
